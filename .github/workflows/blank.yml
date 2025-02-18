@@ -61,7 +61,7 @@ jobs:
         if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/approve-pull-request-action@v1
         with:
-          github-token: ${{ secrets.LONDI }}
+          github-token: ${{ secrets.SG_TOKEN }}
           number: ${{ steps.create-pr.outputs.pull-request-number }}
 
       # Step 9: Merge Pull Request
