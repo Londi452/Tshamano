@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  build-and-check:
+  build-and-check: 
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the repository
