@@ -55,6 +55,7 @@ jobs:
           author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
           body: "This is to show automatic PR creation"
           token: ${{ secrets.LONDI }}
+          delete-branch: true
 
       # Step 8: Approve Pull Request
       - name: Approve Pull Request
