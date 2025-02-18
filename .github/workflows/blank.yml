@@ -8,7 +8,6 @@ on:
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
-
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
@@ -23,6 +22,7 @@ jobs:
 
       # Step 3: Extract git commit data
       - name: Extract git commit data
+        id: commit-data
         uses: rlespinasse/git-commit-data-action@v1.x
 
       # Step 4: Build with Maven
@@ -45,30 +45,30 @@ jobs:
 
       # Step 7: Raise PR
       - name: Raise PR
-        id: demo-1
+        id: create-pr
         uses: peter-evans/create-pull-request@v3
         with:
           branch: "develop"
           base: main
           title: "demo for auto pr"
-          committer: "${{ env.GIT_COMMIT_AUTHOR_NAME }} <${{ env.GIT_COMMIT_AUTHOR_EMAIL }}>"
-          author: "${{ env.GIT_COMMIT_AUTHOR_NAME }} <${{ env.GIT_COMMIT_AUTHOR_EMAIL }}>"
+          committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
+          author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
           body: "This is to show automatic PR creation"
-          token: ${{ secrets.LONDI}}
+          token: ${{ secrets.LONDI }}
 
       # Step 8: Approve Pull Request
       - name: Approve Pull Request
-        if: steps.demo-1.outputs.pull-request-number != ''
+        if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/approve-pull-request-action@v1
         with:
-          github-token: ${{ secrets.LONDI}}
-          number: ${{ steps.demo-1.outputs.pull-request-number }}
+          github-token: ${{ secrets.LONDI }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
 
       # Step 9: Merge Pull Request
       - name: Merge Pull Request
-        if: steps.demo-1.outputs.pull-request-number != ''
+        if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/merge-pull-request-action@v1
         with:
-          github-token: ${{ secrets.LONDI}}
-          number: ${{ steps.demo-1.outputs.pull-request-number }}
+          github-token: ${{ secrets.LONDI }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
           method: squash
