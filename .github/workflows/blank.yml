@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
+    # Skip the job if the commit message contains "[skip ci]"
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:  
       # Step 1: Checkout the repository
       - name: Checkout repository
@@ -51,6 +53,8 @@ jobs:
           branch: "develop"
           base: main
           title: "demo for auto pr"
+          # Append [skip ci] so that merge commits do not trigger the workflow again
+          commit-message: "demo for auto pr [skip ci]"
           committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
           author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
           body: "This is to show automatic PR creation"
