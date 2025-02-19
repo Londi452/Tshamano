@@ -1,0 +1,85 @@
+name: CI with Checkstyle
+
+on:
+  push:
+    branches:
+      - develop  # Change this to your branch name
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    # Skip the job if the commit message contains "[skip ci]"
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2 
+
+      # Step 2: Set up JDK 21 (Fixed Distribution)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Step 3: Extract git commit data
+      - name: Extract git commit data
+        id: commit-data
+        uses: rlespinasse/git-commit-data-action@v1.x
+
+      # Step 4: Build with Maven
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      # Step 5: JUnit tests
+      - name: JUnit tests
+        run: mvn test
+
+      # Step 6: Download and run Checkstyle
+      - name: Download and run Checkstyle
+        run: |
+          # Define Checkstyle version as an environment variable
+          CHECKSTYLE_VERSION=8.45
+          # Download Checkstyle JAR
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-$CHECKSTYLE_VERSION/checkstyle-$CHECKSTYLE_VERSION-all.jar -O checkstyle.jar
+          # Run Checkstyle on the Java files in the repository
+          java -jar checkstyle.jar -c /google_checks.xml $(find . -name "*.java")
+      # Step 7: Remove branch-specific workflow file before raising PR
+      - name: Remove branch-specific workflow file
+        run: |
+          # Remove the branch-specific workflow file so that it is not merged into main.
+          git rm --ignore-unmatch .github/workflows/ci-with-checkstyle.yml
+          # Commit the removal (if there were any changes)
+          git commit -m "Remove branch-specific workflow file" || echo "No changes to commit"
+      # Step 8: Raise PR
+      - name: Raise PR
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: "develop"          # The branch where the changes should go (typically main or develop)
+          base: main                 # Base branch to merge into
+          title: "Demo for auto PR"
+          # Append [skip ci] so that merge commits do not trigger the workflow again
+          commit-message: "Demo for auto PR [skip ci]"
+          committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
+          author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
+          body: "This PR was automatically created, and the branch-specific workflow file has been removed."
+          token: ${{ secrets.LONDI }}
+          delete-branch: false
+
+      # Step 9: Approve Pull Request
+      - name: Approve Pull Request
+        if: steps.create-pr.outputs.pull-request-number != ''
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.SG_TOKEN }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
+
+      # Step 10: Merge Pull Request
+      - name: Merge Pull Request
+        if: steps.create-pr.outputs.pull-request-number != ''
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.LONDI }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
+          method: squash
