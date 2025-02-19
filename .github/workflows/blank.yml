@@ -1,7 +1,0 @@
-name: CI with Checkstyle
-
-on:
-  push:
-    branches:
-      - main
-
