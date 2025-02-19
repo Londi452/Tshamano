@@ -77,4 +77,4 @@ jobs:
         with:
           github-token: ${{ secrets.LONDI }}
           number: ${{ steps.create-pr.outputs.pull-request-number }}
-          method: recursive
+          method: squash
