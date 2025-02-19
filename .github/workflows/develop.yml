@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop  # Trigger on the feature/develop branch
+      -main
 
 jobs:
   build-and-check:
