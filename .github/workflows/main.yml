@@ -2,7 +2,9 @@
 name: CI with Checkstyle
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - controller  # Trigger on the feature/develop branch
 
 jobs:
   build-and-check:
