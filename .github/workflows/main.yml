@@ -2,10 +2,7 @@
 name: CI with Checkstyle
 
 on:
-  workflow_run:
-    workflows: ["controller.yml"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   build-and-check:
