@@ -53,8 +53,8 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v3
         with:
-          branch: "develop"          # The branch where changes should be merged
-          base: controller              # Base branch to merge into
+          branch: "main"          # The branch where changes should be merged
+          base: develop             # Base branch to merge into
           title: "Demo for auto PR"
           commit-message: "Demo for auto PR [skip ci]"
           committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
