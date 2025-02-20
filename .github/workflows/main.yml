@@ -1,7 +1,7 @@
 name: CI with Checkstyle
 
 on:
-  pull_request:
+  push:
     branches:
       - develop # Trigger on pull requests targeting the develop branch
 
