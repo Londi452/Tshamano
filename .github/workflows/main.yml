@@ -2,7 +2,6 @@ name: CI with Checkstyle
 
 on:
   push:
-    types: [closed]
     branches:
       - controller
 jobs:
