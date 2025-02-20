@@ -2,8 +2,9 @@
 name: CI with Checkstyle
 
 on:
-  pull_request:
-    types: [opened,reopend]
+  push:
+    branches:
+      - develop  # Trigger on the feature/develop branch
 
 jobs:
   build-and-check:
