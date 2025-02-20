@@ -1,7 +1,7 @@
 
 name: CI with Checkstyle
 
-on:
+on: 
   push:
     branches:
       - controller  # Trigger on the feature/develop branch
