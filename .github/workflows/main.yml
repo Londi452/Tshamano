@@ -4,11 +4,11 @@ name: CI with Checkstyle
 on:
   pull_request:
     branches:
-      - develop  # Trigger on the feature/develop branch
+      - controller  # Trigger on the feature/develop branch
 
 jobs:
   build-and-check:
-    if: github.ref == 'refs/heads/developer' && !contains(github.event.head_commit.message, '[skip ci]')
+    if: github.ref == 'refs/heads/controller' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the repository
