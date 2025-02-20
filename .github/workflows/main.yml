@@ -2,13 +2,14 @@
 name: CI with Checkstyle
 
 on:
-  pull_request:
-    branches:
-      - controller  # Trigger on the feature/develop branch
+  workflow_run:
+    workflows: ["Workflow A Name"]
+    types:
+      - completed
 
 jobs:
   build-and-check:
-    if: github.ref == 'refs/heads/controller' && !contains(github.event.head_commit.message, '[skip ci]')
+    if: github.ref == 'refs/heads/develop' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the repository
