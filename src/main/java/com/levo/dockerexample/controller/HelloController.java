@@ -12,7 +12,7 @@ public class HelloController {
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test() {
-		return "docker-java-app is up and running: Gilbert is King" + new Date();
+		return "docker-java-app is up and running: Gilbert is King " + new Date();
 	}
 
 }
