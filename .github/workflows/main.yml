@@ -1,21 +1,19 @@
-
 name: CI with Checkstyle
 
 on:
-  pull_request:
+  push:
     branches:
-      - develop # Trigger on the feature/develop branch
+      - controller  # Trigger on pushes to the controller branch
 
 jobs:
   build-and-check:
-    if: github.ref == 'refs/heads/develop' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v2 
 
-      # Step 2: Set up JDK 21 (Fixed Distribution)
+      # Step 2: Set up JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
@@ -32,33 +30,32 @@ jobs:
         run: mvn clean install -DskipTests
 
       # Step 5: JUnit tests
-      - name: JUnit tests
+      - name: Run JUnit tests
         run: mvn test
 
       # Step 6: Download and run Checkstyle
-      - name: Download and run Checkstyle
+      - name: Run Checkstyle
         run: |
           CHECKSTYLE_VERSION=8.45
           wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-$CHECKSTYLE_VERSION/checkstyle-$CHECKSTYLE_VERSION-all.jar -O checkstyle.jar
           java -jar checkstyle.jar -c /google_checks.xml $(find . -name "*.java")
 
-
-      # Step 8: Raise PR
-      - name: Raise PR
+      # Step 7: Raise PR
+      - name: Create Pull Request
         id: create-pr
         uses: peter-evans/create-pull-request@v3
         with:
-          branch: "main"          # The branch where changes should be merged
-          base: develop             # Base branch to merge into
+          branch: "controller"   # Source branch
+          base: "develop"        # Target branch for merging
           title: "Demo for auto PR"
           commit-message: "Demo for auto PR [skip ci]"
           committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
           author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
-          body: "This PR was automatically created, and the branch-specific workflow file has been removed."
+          body: "This PR was automatically created after successful CI checks."
           token: ${{ secrets.LONDI }}
           delete-branch: true
 
-      # Step 9: Approve Pull Request
+      # Step 8: Approve Pull Request
       - name: Approve Pull Request
         if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/approve-pull-request-action@v1
@@ -66,7 +63,7 @@ jobs:
           github-token: ${{ secrets.SG_TOKEN }}
           number: ${{ steps.create-pr.outputs.pull-request-number }}
 
-      # Step 10: Merge Pull Request using recursive merge strategy
+      # Step 9: Merge Pull Request using squash strategy
       - name: Merge Pull Request
         if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/merge-pull-request-action@v1
