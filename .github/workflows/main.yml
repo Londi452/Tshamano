@@ -1,9 +1,9 @@
 name: CI with Checkstyle
 
 on:
-  pull_request:
+  push:
     branches:
-      - controller # Trigger on pull requests targeting the develop branch
+      - develop # Trigger on pull requests targeting the develop branch
 
 jobs:
   build-and-check:
