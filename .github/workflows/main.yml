@@ -2,16 +2,16 @@ name: CI with Checkstyle
 
 on:
   push:
+    types: [closed]
     branches:
-      - controller # Trigger on pull requests targeting the develop branch
-
+      - controller
 jobs:
-  build-and-check:
+  run-on-merge:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2
 
       # Step 2: Set up JDK 21 (Fixed Distribution)
       - name: Set up JDK 21
