@@ -3,7 +3,7 @@ name: CI with Checkstyle
 on:
   pull_request:
     branches:
-      - develop # Trigger on pull requests targeting the develop branch
+      - controller # Trigger on pull requests targeting the develop branch
 
 jobs:
   build-and-check:
