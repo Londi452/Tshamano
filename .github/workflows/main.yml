@@ -4,7 +4,7 @@ name: CI with Checkstyle
 on:
   push:
     branches:
-      - controller  # Trigger on the feature/develop branch
+      - develop # Trigger on the feature/develop branch
 
 jobs:
   build-and-check:
