@@ -63,7 +63,7 @@ jobs:
           token: ${{ secrets.LONDI }}
           delete-branch: true
 
-      # Step 9: Approve Pull Request
+      # Step 9: Approve Pull Request 
       - name: Approve Pull Request
         if: steps.create-pr.outputs.pull-request-number != ''
         uses: juliangruber/approve-pull-request-action@v1
