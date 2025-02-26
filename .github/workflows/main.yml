@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - controller
+      - developer
 
 jobs:
   build-and-check:
