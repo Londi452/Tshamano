@@ -7,6 +7,11 @@ on:
       - develop  
       - controller # Trigger on the feature/develop branch 
 
+  
+  pull_request:
+    branches:
+      - controller
+
 jobs:
   build-and-check:
     
