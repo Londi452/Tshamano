@@ -79,3 +79,12 @@ jobs:
           github-token: ${{ secrets.LONDI }}
           number: ${{ steps.create-pr.outputs.pull-request-number }}
           method: squash
+
+
+             # Step 11: Trigger Main Workflow after completion
+      - name: Trigger Main Workflow
+        if: success()
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: "Main Workflow"
+          token: ${{ secrets.GITHUB_TOKEN }}
