@@ -81,10 +81,4 @@ jobs:
           method: squash
 
 
-             # Step 11: Trigger Main Workflow after completion
-      - name: Trigger Main Workflow
-        if: success()
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "main.yml"
-          token: ${{ secrets.GITHUB_TOKEN }}
+        
