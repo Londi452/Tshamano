@@ -7,7 +7,7 @@ on:
       - controller  # Trigger on the feature/develop branch
 
 jobs:
-  build-and-check:
+  build-and-check: 
 
     runs-on: ubuntu-latest
     steps:
