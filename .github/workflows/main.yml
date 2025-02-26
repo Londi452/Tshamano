@@ -1,10 +1,10 @@
-name: CI with Checkstyle  
+name: Main Workflow  
 
 on:
-  push:
-    branches:
-      - controller  # Trigger on the controller branch
-  workflow_dispatch:  # Allows manual triggering
+  workflow_run:
+    workflows: ["controller.yml"]
+    types:
+      - completed
 
 jobs:
   main-job:
