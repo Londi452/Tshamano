@@ -27,7 +27,7 @@ jobs:
         id: commit-data 
         uses: rlespinasse/git-commit-data-action@v1.x
 
-      # Step 4: Build with Maven
+      # Step 4: Build with Maven 
       - name: Build with Maven 
         run: mvn clean install -DskipTests
 
