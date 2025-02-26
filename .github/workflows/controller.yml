@@ -86,6 +86,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: "main.yml"
+          ref: "refs/heads/developer"
           token: ${{ secrets.LONDI }}
 
         
