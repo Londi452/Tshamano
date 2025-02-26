@@ -1,5 +1,5 @@
 
-name: CI with Checkstyle 
+name: CI with Checkstyle  
 
 on:
   push:
