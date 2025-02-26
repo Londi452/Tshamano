@@ -24,7 +24,7 @@ jobs:
 
       # Step 3: Extract git commit data
       - name: Extract git commit data
-        id: commit-data
+        id: commit-data 
         uses: rlespinasse/git-commit-data-action@v1.x
 
       # Step 4: Build with Maven
