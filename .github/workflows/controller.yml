@@ -86,5 +86,5 @@ jobs:
         if: success()
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "Main Workflow"
+          workflow: "main.yml"
           token: ${{ secrets.GITHUB_TOKEN }}
