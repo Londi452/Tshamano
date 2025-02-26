@@ -2,12 +2,6 @@
 name: CI with Checkstyle
 
 on:
-  push:
-    branches:
-      - develop  
-      - controller # Trigger on the feature/develop branch 
-
-  
   pull_request:
     branches:
       - controller
