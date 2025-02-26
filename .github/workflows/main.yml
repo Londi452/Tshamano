@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: 'refs/heads/developer' 
+          ref: 'refs/heads/develop' 
 
       # Step 2: Set up JDK 21 (Fixed Distribution)
       - name: Set up JDK 21
