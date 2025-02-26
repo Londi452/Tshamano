@@ -1,0 +1,79 @@
+
+on:
+  workflow_dispatch:  # Allows manual or workflow-based triggering
+
+jobs:
+  main-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the developer branch
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: 'refs/heads/developer' 
+
+      # Step 2: Set up JDK 21 (Fixed Distribution)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Step 3: Extract git commit data
+      - name: Extract git commit data
+        id: commit-data
+        uses: rlespinasse/git-commit-data-action@v1.x
+
+      # Step 4: Build with Maven
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      # Step 5: JUnit tests
+      - name: JUnit tests
+        run: mvn test
+
+      # Step 6: Download and run Checkstyle
+      - name: Download and run Checkstyle
+        run: |
+          CHECKSTYLE_VERSION=8.45
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-$CHECKSTYLE_VERSION/checkstyle-$CHECKSTYLE_VERSION-all.jar -O checkstyle.jar
+          java -jar checkstyle.jar -c /google_checks.xml $(find . -name "*.java")
+
+      # Step 7: Remove branch-specific workflow file before raising PR
+      - name: Remove branch-specific workflow file
+        run: |
+          git rm --ignore-unmatch .github/workflows/ci-with-checkstyle.yml
+          git commit -m "Remove branch-specific workflow file" || echo "No changes to commit"
+
+      # Step 8: Raise PR
+      - name: Raise PR
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: "main"          # The branch where changes should be merged
+          base: develop             # Base branch to merge into
+          title: "Demo for auto PR"
+          commit-message: "Demo for auto PR [skip ci]"
+          committer: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
+          author: "${{ steps.commit-data.outputs.author-name }} <${{ steps.commit-data.outputs.author-email }}>"
+          body: "This PR was automatically created, and the branch-specific workflow file has been removed."
+          token: ${{ secrets.LONDI }}
+          delete-branch: true
+
+      # Step 9: Approve Pull Request
+      - name: Approve Pull Request
+        if: steps.create-pr.outputs.pull-request-number != ''
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.SG_TOKEN }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
+
+      # Step 10: Merge Pull Request using recursive merge strategy
+      - name: Merge Pull Request
+        if: steps.create-pr.outputs.pull-request-number != ''
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.LONDI }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
+          method: squash
