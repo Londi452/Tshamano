@@ -1,10 +1,7 @@
 name: Main Workflow  
 
 on:
-  workflow_run:
-    workflows: ["controller.yml"]
-    types:
-      - completed
+  workflow_dispatch:  # Required for Workflow 1 to trigger this workflow
 
 jobs:
   main-job:
@@ -14,6 +11,5 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Your main workflow steps go here
-      - name: Do something after CI with Checkstyle completes
-        run: echo "The CI with Checkstyle workflow has completed successfully, and now the main workflow is triggered."
+      - name: Run post-checkstyle tasks
+        run: echo "CI with Checkstyle completed successfully. Now running main workflow."
