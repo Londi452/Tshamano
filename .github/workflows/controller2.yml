@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-check:  
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository 
