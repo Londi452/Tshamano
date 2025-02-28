@@ -3,7 +3,7 @@ name: CI with Checkstyle
 
 on:
   push: 
-    branches:
+    branches: 
       - controller2  # Trigger on the feature/develop branch
 
 jobs:
